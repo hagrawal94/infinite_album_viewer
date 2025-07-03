@@ -1,7 +1,5 @@
-import '../entities/album.dart';
+import '../entities/album_entity.dart';
 
 abstract class AlbumRepository {
-  Future<List<Album>> getAlbums();
-  Future<Album> getAlbumById(int id);
-  Future<List<Album>> getAlbumsByUserId(int userId);
+  Future<List<AlbumEntity>> getAlbums();
 } 

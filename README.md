@@ -28,6 +28,7 @@ lib/
 │           ├── widgets/            # Reusable widgets
 │           └── screens/            # UI screens
 └── main.dart
+├── injection.dart
 ```
 
 ## Dependencies
