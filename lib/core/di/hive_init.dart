@@ -7,13 +7,13 @@ class HiveInit {
   static Future<void> init() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
     await Hive.initFlutter(appDocumentDir.path);
-    
+
     // Register adapters
     Hive.registerAdapter(AlbumModelAdapter());
     Hive.registerAdapter(PhotoModelAdapter());
-    
+
     // Open boxes
     await Hive.openBox<AlbumModel>('albums');
-    await Hive.openBox<List<PhotoModel>>('photos');
+    await Hive.openBox<PhotoModel>('photos');
   }
-} 
+}

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import '../models/album_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,8 +15,21 @@ class AlbumRemoteDatasourceImpl implements AlbumRemoteDatasource {
 
   @override
   Future<List<AlbumModel>> fetchAlbums() async {
-    final response = await dio.get('https://jsonplaceholder.typicode.com/albums');
-    final data = response.data as List;
-    return data.map((json) => AlbumModel.fromJson(json)).toList();
+    try {
+      final response = await dio.get(
+        'https://jsonplaceholder.typicode.com/albums',
+        options: Options(
+          headers: {
+            'User-Agent': 'Dart/Flutter',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+      final data = response.data as List;
+      return data.map((json) => AlbumModel.fromJson(json)).toList();
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 }

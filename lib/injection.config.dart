@@ -58,17 +58,17 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.albumBox,
       preResolve: true,
     );
-    await gh.factoryAsync<_i979.Box<List<_i253.PhotoModel>>>(
+    await gh.factoryAsync<_i979.Box<_i253.PhotoModel>>(
       () => registerModule.photoBox,
       preResolve: true,
     );
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.factory<_i543.AlbumRemoteDatasource>(
         () => _i543.AlbumRemoteDatasourceImpl(gh<_i361.Dio>()));
-    gh.factory<_i750.PhotoLocalDatasource>(() => _i750.PhotoLocalDatasourceImpl(
-        gh<_i979.Box<List<_i253.PhotoModel>>>()));
     gh.factory<_i821.PhotoRemoteDatasource>(
         () => _i821.PhotoRemoteDatasourceImpl(gh<_i361.Dio>()));
+    gh.factory<_i750.PhotoLocalDatasource>(() =>
+        _i750.PhotoLocalDatasourceImpl(gh<_i979.Box<_i253.PhotoModel>>()));
     gh.lazySingleton<_i382.PhotoRepository>(() => _i970.PhotoRepositoryImpl(
           remote: gh<_i821.PhotoRemoteDatasource>(),
           local: gh<_i750.PhotoLocalDatasource>(),

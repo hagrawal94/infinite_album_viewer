@@ -15,15 +15,14 @@ class AlbumRepositoryImpl implements AlbumRepository {
   });
 
   @override
-  Future<List<AlbumEntity>> getAlbums() async {
-    try {
-      final albums = await remote.fetchAlbums();
-      await local.cacheAlbums(albums);
-      return albums;
-    } catch (e) {
-      // fallback to local cache
-      final cached = await local.getCachedAlbums();
-      return cached;
-    }
+  Future<List<AlbumEntity>> getCachedAlbums() {
+    return local.getCachedAlbums();
+  }
+
+  @override
+  Future<List<AlbumEntity>> getRemoteAlbums() async {
+    final albums = await remote.fetchAlbums();
+    await local.cacheAlbums(albums);
+    return albums;
   }
 }

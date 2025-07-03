@@ -11,24 +11,28 @@ class PhotoInitial extends PhotoState {
 }
 
 class PhotoLoading extends PhotoState {
+  final int albumId;
+  const PhotoLoading(this.albumId);
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [albumId];
 }
 
 class PhotoLoaded extends PhotoState {
-  final List<PhotoEntity> photos;
+  final Map<int, List<PhotoEntity>> albumPhotos; // albumId -> photos
 
-  const PhotoLoaded(this.photos);
+  const PhotoLoaded(this.albumPhotos);
 
   @override
-  List<Object> get props => [photos];
+  List<Object> get props => [albumPhotos];
 }
 
 class PhotoError extends PhotoState {
   final String message;
+  final int albumId;
 
-  const PhotoError(this.message);
+  const PhotoError(this.message, this.albumId);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [message, albumId];
 }

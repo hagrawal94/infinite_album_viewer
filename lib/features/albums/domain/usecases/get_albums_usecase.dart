@@ -8,7 +8,11 @@ class GetAlbumsUseCase {
 
   GetAlbumsUseCase(this.repository);
 
-  Future<List<AlbumEntity>> call() async {
-    return await repository.getAlbums();
+  Future<List<AlbumEntity>> getCachedAlbums() {
+    return repository.getCachedAlbums();
+  }
+
+  Future<List<AlbumEntity>> getRemoteAlbums() {
+    return repository.getRemoteAlbums();
   }
 }

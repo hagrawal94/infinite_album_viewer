@@ -9,17 +9,25 @@ abstract class PhotoLocalDatasource {
 
 @Injectable(as: PhotoLocalDatasource)
 class PhotoLocalDatasourceImpl implements PhotoLocalDatasource {
-  final Box<List<PhotoModel>> box;
+  final Box<PhotoModel> box;
 
   PhotoLocalDatasourceImpl(this.box);
 
   @override
   Future<void> cachePhotos(int albumId, List<PhotoModel> photos) async {
-    await box.put(albumId.toString(), photos);
+    // Clear existing photos for this album
+    final keysToDelete = box.keys.where((key) => key.toString().startsWith('$albumId-'));
+    await box.deleteAll(keysToDelete);
+
+    for (var photo in photos) {
+      await box.put('$albumId-${photo.id}', photo);
+    }
   }
 
   @override
   Future<List<PhotoModel>> getCachedPhotos(int albumId) async {
-    return box.get(albumId.toString(), defaultValue: [])!;
+    return box.values
+        .where((photo) => photo.albumId == albumId)
+        .toList();
   }
 }

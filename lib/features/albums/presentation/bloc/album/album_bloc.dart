@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_album_viewer/features/albums/domain/entities/album_entity.dart';
 import '../../../domain/usecases/get_albums_usecase.dart';
 import 'album_event.dart';
 import 'album_state.dart';
@@ -8,6 +9,8 @@ import 'package:injectable/injectable.dart';
 class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
   final GetAlbumsUseCase getAlbumsUseCase;
 
+  List<AlbumEntity>? _albumCache;
+
   AlbumBloc({required this.getAlbumsUseCase}) : super(AlbumInitial()) {
     on<FetchAlbumsEvent>(_onFetchAlbums);
   }
@@ -16,11 +19,22 @@ class AlbumBloc extends Bloc<AlbumEvent, AlbumState> {
     FetchAlbumsEvent event,
     Emitter<AlbumState> emit,
   ) async {
-    emit(AlbumLoading());
+    if (_albumCache != null) return; // already loaded in-memory
 
     try {
-      final albums = await getAlbumsUseCase();
-      emit(AlbumLoaded(albums));
+      // Emit cache first
+      final cachedAlbums = await getAlbumsUseCase.getCachedAlbums();
+      if (cachedAlbums.isNotEmpty) {
+        _albumCache = cachedAlbums;
+        emit(AlbumLoaded(cachedAlbums));
+      } else {
+        emit(AlbumLoading());
+      }
+
+      // Fetch remote and update
+      final remoteAlbums = await getAlbumsUseCase.getRemoteAlbums();
+      _albumCache = remoteAlbums;
+      emit(AlbumLoaded(remoteAlbums));
     } catch (e) {
       emit(const AlbumError("Failed to load albums"));
     }

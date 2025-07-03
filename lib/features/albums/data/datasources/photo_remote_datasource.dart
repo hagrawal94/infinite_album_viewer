@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import '../models/photo_model.dart';
 import 'package:injectable/injectable.dart';
 
@@ -14,11 +15,22 @@ class PhotoRemoteDatasourceImpl implements PhotoRemoteDatasource {
 
   @override
   Future<List<PhotoModel>> fetchPhotosByAlbumId(int albumId) async {
-    final response = await dio.get(
-      'https://jsonplaceholder.typicode.com/photos',
-      queryParameters: {'albumId': albumId},
-    );
-    final data = response.data as List;
-    return data.map((json) => PhotoModel.fromJson(json)).toList();
+    try {
+      final response = await dio.get(
+        'https://jsonplaceholder.typicode.com/photos',
+        queryParameters: {'albumId': albumId},
+        options: Options(
+          headers: {
+            'User-Agent': 'Dart/Flutter',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+      final data = response.data as List;
+      return data.map((json) => PhotoModel.fromJson(json)).toList();
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 }

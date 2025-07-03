@@ -8,7 +8,11 @@ class GetPhotosByAlbumIdUseCase {
 
   GetPhotosByAlbumIdUseCase(this.repository);
 
-  Future<List<PhotoEntity>> call(int albumId) async {
-    return await repository.getPhotosByAlbumId(albumId);
+  Future<List<PhotoEntity>> getCachedPhotos(int albumId) {
+    return repository.getCachedPhotos(albumId);
+  }
+
+  Future<List<PhotoEntity>> getRemotePhotos(int albumId) {
+    return repository.getRemotePhotos(albumId);
   }
 }

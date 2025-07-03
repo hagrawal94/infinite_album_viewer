@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../domain/entities/photo_entity.dart';
 import '../../domain/repositories/photo_repository.dart';
 import '../datasources/photo_local_datasource.dart';
@@ -15,14 +17,14 @@ class PhotoRepositoryImpl implements PhotoRepository {
   });
 
   @override
-  Future<List<PhotoEntity>> getPhotosByAlbumId(int albumId) async {
-    try {
-      final photos = await remote.fetchPhotosByAlbumId(albumId);
-      await local.cachePhotos(albumId, photos);
-      return photos;
-    } catch (e) {
-      final cached = await local.getCachedPhotos(albumId);
-      return cached;
-    }
+  Future<List<PhotoEntity>> getCachedPhotos(int albumId) {
+    return local.getCachedPhotos(albumId);
+  }
+
+  @override
+  Future<List<PhotoEntity>> getRemotePhotos(int albumId) async {
+    final photos = await remote.fetchPhotosByAlbumId(albumId);
+    await local.cachePhotos(albumId, photos);
+    return photos;
   }
 }

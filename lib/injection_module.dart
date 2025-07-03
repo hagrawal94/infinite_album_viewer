@@ -14,6 +14,5 @@ abstract class RegisterModule {
   Future<Box<AlbumModel>> get albumBox => Hive.openBox<AlbumModel>('albums');
 
   @preResolve
-  Future<Box<List<PhotoModel>>> get photoBox =>
-      Hive.openBox<List<PhotoModel>>('photos');
+  Future<Box<PhotoModel>> get photoBox => Hive.openBox<PhotoModel>('photos');
 }
